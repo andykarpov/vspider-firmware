@@ -189,13 +189,12 @@ set_location_assignment PIN_131 -to DRD
 set_location_assignment PIN_132 -to DWR
 set_location_assignment PIN_133 -to MTR
 
+
+
+set_global_assignment -name VHDL_FILE ../rtl/sd/zc_spi.vhd
 set_global_assignment -name QIP_FILE ../rtl/shift/shift_out.qip
 set_global_assignment -name QIP_FILE ../rtl/shift/shift_in.qip
 set_global_assignment -name SDC_FILE vspider.sdc
-set_global_assignment -name VHDL_FILE ../rtl/uart/ay_uart.vhd
 set_global_assignment -name VHDL_FILE ../rtl/vspider_top.vhd
 set_global_assignment -name VHDL_FILE ../rtl/video/video.vhd
-set_global_assignment -name VHDL_FILE ../rtl/sd/zcontroller.vhd
-set_global_assignment -name VHDL_FILE ../rtl/sd/divmmc.vhd
 set_global_assignment -name VHDL_FILE ../rtl/memory/memory.vhd
-

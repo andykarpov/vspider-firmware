@@ -1,5 +1,5 @@
 Design Assistant report for vspider
-Mon May 11 17:52:06 2026
+Mon May 11 19:16:16 2026
 Quartus II 32-bit Version 13.0.1 Build 232 06/12/2013 Service Pack 1 SJ Web Edition
 
 
@@ -10,8 +10,9 @@ Quartus II 32-bit Version 13.0.1 Build 232 06/12/2013 Service Pack 1 SJ Web Edit
   2. Design Assistant Summary
   3. Design Assistant Settings
   4. High Violations
-  5. Information only Violations
-  6. Design Assistant Messages
+  5. Medium Violations
+  6. Information only Violations
+  7. Design Assistant Messages
 
 
 
@@ -37,14 +38,15 @@ applicable agreement for further details.
 +-------------------------------------------------------------------------+
 ; Design Assistant Summary                                                ;
 +-----------------------------------+-------------------------------------+
-; Design Assistant Status           ; Analyzed - Mon May 11 17:52:06 2026 ;
+; Design Assistant Status           ; Analyzed - Mon May 11 19:16:16 2026 ;
 ; Revision Name                     ; vspider                             ;
 ; Top-level Entity Name             ; vspider_top                         ;
 ; Family                            ; MAX3000A                            ;
 ; Total Critical Violations         ; 0                                   ;
-; Total High Violations             ; 8                                   ;
-; - Rule S101                       ; 8                                   ;
-; Total Medium Violations           ; 0                                   ;
+; Total High Violations             ; 7                                   ;
+; - Rule S101                       ; 7                                   ;
+; Total Medium Violations           ; 1                                   ;
+; - Rule C106                       ; 1                                   ;
 ; Total Information only Violations ; 69                                  ;
 ; - Rule T101                       ; 19                                  ;
 ; - Rule T102                       ; 50                                  ;
@@ -97,177 +99,184 @@ applicable agreement for further details.
 +--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------+----+
 
 
-+-------------------------------------------------------------------------------------------------------------------------------+
-; High Violations                                                                                                               ;
-+----------------------------------------------------------------------------------------------------------+--------------------+
-; Rule name                                                                                                ; Name               ;
-+----------------------------------------------------------------------------------------------------------+--------------------+
-; Rule S101: Output enable and input of the same tri-state node should not be driven by same signal source ; D[0]               ;
-;  Output enable and input source node(s) list                                                             ; A[14]              ;
-;  Output enable and input source node(s) list                                                             ; A[15]              ;
-;  Output enable and input source node(s) list                                                             ; N_RD               ;
-;  Output enable and input source node(s) list                                                             ; N_MREQ             ;
-;  Output enable and input source node(s) list                                                             ; video:U5|attr_r[0] ;
-;  Output enable and input source node(s) list                                                             ; A[1]               ;
-;  Output enable and input source node(s) list                                                             ; A[3]               ;
-;  Output enable and input source node(s) list                                                             ; A[6]               ;
-;  Output enable and input source node(s) list                                                             ; A[7]               ;
-;  Output enable and input source node(s) list                                                             ; BUS_N_IORQGE       ;
-; Rule S101: Output enable and input of the same tri-state node should not be driven by same signal source ; D[4]               ;
-;  Output enable and input source node(s) list                                                             ; A[14]              ;
-;  Output enable and input source node(s) list                                                             ; A[15]              ;
-;  Output enable and input source node(s) list                                                             ; N_RD               ;
-;  Output enable and input source node(s) list                                                             ; N_MREQ             ;
-;  Output enable and input source node(s) list                                                             ; A[1]               ;
-;  Output enable and input source node(s) list                                                             ; A[3]               ;
-;  Output enable and input source node(s) list                                                             ; A[6]               ;
-;  Output enable and input source node(s) list                                                             ; A[7]               ;
-;  Output enable and input source node(s) list                                                             ; BUS_N_IORQGE       ;
-;  Output enable and input source node(s) list                                                             ; N_IORQ             ;
-; Rule S101: Output enable and input of the same tri-state node should not be driven by same signal source ; D[5]               ;
-;  Output enable and input source node(s) list                                                             ; A[14]              ;
-;  Output enable and input source node(s) list                                                             ; A[15]              ;
-;  Output enable and input source node(s) list                                                             ; N_RD               ;
-;  Output enable and input source node(s) list                                                             ; N_MREQ             ;
-;  Output enable and input source node(s) list                                                             ; A[1]               ;
-;  Output enable and input source node(s) list                                                             ; A[3]               ;
-;  Output enable and input source node(s) list                                                             ; A[6]               ;
-;  Output enable and input source node(s) list                                                             ; A[7]               ;
-;  Output enable and input source node(s) list                                                             ; BUS_N_IORQGE       ;
-;  Output enable and input source node(s) list                                                             ; N_IORQ             ;
-; Rule S101: Output enable and input of the same tri-state node should not be driven by same signal source ; D[1]               ;
-;  Output enable and input source node(s) list                                                             ; A[14]              ;
-;  Output enable and input source node(s) list                                                             ; A[15]              ;
-;  Output enable and input source node(s) list                                                             ; N_RD               ;
-;  Output enable and input source node(s) list                                                             ; N_MREQ             ;
-;  Output enable and input source node(s) list                                                             ; A[1]               ;
-;  Output enable and input source node(s) list                                                             ; A[3]               ;
-;  Output enable and input source node(s) list                                                             ; A[6]               ;
-;  Output enable and input source node(s) list                                                             ; A[7]               ;
-;  Output enable and input source node(s) list                                                             ; BUS_N_IORQGE       ;
-;  Output enable and input source node(s) list                                                             ; N_IORQ             ;
-; Rule S101: Output enable and input of the same tri-state node should not be driven by same signal source ; D[2]               ;
-;  Output enable and input source node(s) list                                                             ; A[14]              ;
-;  Output enable and input source node(s) list                                                             ; A[15]              ;
-;  Output enable and input source node(s) list                                                             ; N_RD               ;
-;  Output enable and input source node(s) list                                                             ; N_MREQ             ;
-;  Output enable and input source node(s) list                                                             ; A[1]               ;
-;  Output enable and input source node(s) list                                                             ; A[3]               ;
-;  Output enable and input source node(s) list                                                             ; A[6]               ;
-;  Output enable and input source node(s) list                                                             ; A[7]               ;
-;  Output enable and input source node(s) list                                                             ; BUS_N_IORQGE       ;
-;  Output enable and input source node(s) list                                                             ; N_IORQ             ;
-; Rule S101: Output enable and input of the same tri-state node should not be driven by same signal source ; D[3]               ;
-;  Output enable and input source node(s) list                                                             ; A[14]              ;
-;  Output enable and input source node(s) list                                                             ; A[15]              ;
-;  Output enable and input source node(s) list                                                             ; N_RD               ;
-;  Output enable and input source node(s) list                                                             ; N_MREQ             ;
-;  Output enable and input source node(s) list                                                             ; A[1]               ;
-;  Output enable and input source node(s) list                                                             ; A[3]               ;
-;  Output enable and input source node(s) list                                                             ; A[6]               ;
-;  Output enable and input source node(s) list                                                             ; A[7]               ;
-;  Output enable and input source node(s) list                                                             ; BUS_N_IORQGE       ;
-;  Output enable and input source node(s) list                                                             ; N_IORQ             ;
-; Rule S101: Output enable and input of the same tri-state node should not be driven by same signal source ; D[6]               ;
-;  Output enable and input source node(s) list                                                             ; A[14]              ;
-;  Output enable and input source node(s) list                                                             ; A[15]              ;
-;  Output enable and input source node(s) list                                                             ; N_RD               ;
-;  Output enable and input source node(s) list                                                             ; N_MREQ             ;
-;  Output enable and input source node(s) list                                                             ; A[1]               ;
-;  Output enable and input source node(s) list                                                             ; A[3]               ;
-;  Output enable and input source node(s) list                                                             ; A[6]               ;
-;  Output enable and input source node(s) list                                                             ; A[7]               ;
-;  Output enable and input source node(s) list                                                             ; BUS_N_IORQGE       ;
-;  Output enable and input source node(s) list                                                             ; N_IORQ             ;
-; Rule S101: Output enable and input of the same tri-state node should not be driven by same signal source ; D[7]               ;
-;  Output enable and input source node(s) list                                                             ; A[14]              ;
-;  Output enable and input source node(s) list                                                             ; A[15]              ;
-;  Output enable and input source node(s) list                                                             ; N_RD               ;
-;  Output enable and input source node(s) list                                                             ; N_MREQ             ;
-;  Output enable and input source node(s) list                                                             ; A[1]               ;
-;  Output enable and input source node(s) list                                                             ; A[3]               ;
-;  Output enable and input source node(s) list                                                             ; A[6]               ;
-;  Output enable and input source node(s) list                                                             ; A[7]               ;
-;  Output enable and input source node(s) list                                                             ; BUS_N_IORQGE       ;
-;  Output enable and input source node(s) list                                                             ; N_IORQ             ;
-+----------------------------------------------------------------------------------------------------------+--------------------+
++-------------------------------------------------------------------------------------------------------------------------+
+; High Violations                                                                                                         ;
++----------------------------------------------------------------------------------------------------------+--------------+
+; Rule name                                                                                                ; Name         ;
++----------------------------------------------------------------------------------------------------------+--------------+
+; Rule S101: Output enable and input of the same tri-state node should not be driven by same signal source ; D[7]         ;
+;  Output enable and input source node(s) list                                                             ; A[2]         ;
+;  Output enable and input source node(s) list                                                             ; A[4]         ;
+;  Output enable and input source node(s) list                                                             ; A[7]         ;
+;  Output enable and input source node(s) list                                                             ; A[3]         ;
+;  Output enable and input source node(s) list                                                             ; A[5]         ;
+;  Output enable and input source node(s) list                                                             ; A[6]         ;
+;  Output enable and input source node(s) list                                                             ; A[0]         ;
+;  Output enable and input source node(s) list                                                             ; A[1]         ;
+;  Output enable and input source node(s) list                                                             ; BUS_N_IORQGE ;
+;  Output enable and input source node(s) list                                                             ; N_RD         ;
+; Rule S101: Output enable and input of the same tri-state node should not be driven by same signal source ; D[5]         ;
+;  Output enable and input source node(s) list                                                             ; A[2]         ;
+;  Output enable and input source node(s) list                                                             ; A[4]         ;
+;  Output enable and input source node(s) list                                                             ; A[7]         ;
+;  Output enable and input source node(s) list                                                             ; A[3]         ;
+;  Output enable and input source node(s) list                                                             ; A[5]         ;
+;  Output enable and input source node(s) list                                                             ; A[6]         ;
+;  Output enable and input source node(s) list                                                             ; A[0]         ;
+;  Output enable and input source node(s) list                                                             ; A[1]         ;
+;  Output enable and input source node(s) list                                                             ; BUS_N_IORQGE ;
+;  Output enable and input source node(s) list                                                             ; N_RD         ;
+; Rule S101: Output enable and input of the same tri-state node should not be driven by same signal source ; D[4]         ;
+;  Output enable and input source node(s) list                                                             ; A[2]         ;
+;  Output enable and input source node(s) list                                                             ; A[4]         ;
+;  Output enable and input source node(s) list                                                             ; A[7]         ;
+;  Output enable and input source node(s) list                                                             ; A[3]         ;
+;  Output enable and input source node(s) list                                                             ; A[5]         ;
+;  Output enable and input source node(s) list                                                             ; A[6]         ;
+;  Output enable and input source node(s) list                                                             ; A[0]         ;
+;  Output enable and input source node(s) list                                                             ; A[1]         ;
+;  Output enable and input source node(s) list                                                             ; BUS_N_IORQGE ;
+;  Output enable and input source node(s) list                                                             ; N_RD         ;
+; Rule S101: Output enable and input of the same tri-state node should not be driven by same signal source ; D[1]         ;
+;  Output enable and input source node(s) list                                                             ; A[2]         ;
+;  Output enable and input source node(s) list                                                             ; A[4]         ;
+;  Output enable and input source node(s) list                                                             ; A[7]         ;
+;  Output enable and input source node(s) list                                                             ; A[3]         ;
+;  Output enable and input source node(s) list                                                             ; A[5]         ;
+;  Output enable and input source node(s) list                                                             ; A[6]         ;
+;  Output enable and input source node(s) list                                                             ; A[0]         ;
+;  Output enable and input source node(s) list                                                             ; A[1]         ;
+;  Output enable and input source node(s) list                                                             ; BUS_N_IORQGE ;
+;  Output enable and input source node(s) list                                                             ; N_RD         ;
+; Rule S101: Output enable and input of the same tri-state node should not be driven by same signal source ; D[2]         ;
+;  Output enable and input source node(s) list                                                             ; A[2]         ;
+;  Output enable and input source node(s) list                                                             ; A[4]         ;
+;  Output enable and input source node(s) list                                                             ; A[7]         ;
+;  Output enable and input source node(s) list                                                             ; A[3]         ;
+;  Output enable and input source node(s) list                                                             ; A[5]         ;
+;  Output enable and input source node(s) list                                                             ; A[6]         ;
+;  Output enable and input source node(s) list                                                             ; A[0]         ;
+;  Output enable and input source node(s) list                                                             ; A[1]         ;
+;  Output enable and input source node(s) list                                                             ; BUS_N_IORQGE ;
+;  Output enable and input source node(s) list                                                             ; N_RD         ;
+; Rule S101: Output enable and input of the same tri-state node should not be driven by same signal source ; D[3]         ;
+;  Output enable and input source node(s) list                                                             ; A[2]         ;
+;  Output enable and input source node(s) list                                                             ; A[4]         ;
+;  Output enable and input source node(s) list                                                             ; A[7]         ;
+;  Output enable and input source node(s) list                                                             ; A[3]         ;
+;  Output enable and input source node(s) list                                                             ; A[5]         ;
+;  Output enable and input source node(s) list                                                             ; A[6]         ;
+;  Output enable and input source node(s) list                                                             ; A[0]         ;
+;  Output enable and input source node(s) list                                                             ; A[1]         ;
+;  Output enable and input source node(s) list                                                             ; BUS_N_IORQGE ;
+;  Output enable and input source node(s) list                                                             ; N_RD         ;
+; Rule S101: Output enable and input of the same tri-state node should not be driven by same signal source ; D[6]         ;
+;  Output enable and input source node(s) list                                                             ; A[2]         ;
+;  Output enable and input source node(s) list                                                             ; A[4]         ;
+;  Output enable and input source node(s) list                                                             ; A[7]         ;
+;  Output enable and input source node(s) list                                                             ; A[3]         ;
+;  Output enable and input source node(s) list                                                             ; A[5]         ;
+;  Output enable and input source node(s) list                                                             ; A[6]         ;
+;  Output enable and input source node(s) list                                                             ; A[0]         ;
+;  Output enable and input source node(s) list                                                             ; A[1]         ;
+;  Output enable and input source node(s) list                                                             ; BUS_N_IORQGE ;
+;  Output enable and input source node(s) list                                                             ; N_RD         ;
++----------------------------------------------------------------------------------------------------------+--------------+
 
 
-+------------------------------------------------------------------------------------------------------------------------+
-; Information only Violations                                                                                            ;
-+------------------------------------------------------------------+-------------------------------------------+---------+
-; Rule name                                                        ; Name                                      ; Fan-Out ;
-+------------------------------------------------------------------+-------------------------------------------+---------+
-; Rule T101: Nodes with more than the specified number of fan-outs ; A[15]                                     ; 33      ;
-; Rule T101: Nodes with more than the specified number of fan-outs ; N_RD                                      ; 33      ;
-; Rule T101: Nodes with more than the specified number of fan-outs ; A[1]                                      ; 47      ;
-; Rule T101: Nodes with more than the specified number of fan-outs ; A[3]                                      ; 36      ;
-; Rule T101: Nodes with more than the specified number of fan-outs ; A[6]                                      ; 36      ;
-; Rule T101: Nodes with more than the specified number of fan-outs ; A[7]                                      ; 36      ;
-; Rule T101: Nodes with more than the specified number of fan-outs ; N_IORQ                                    ; 60      ;
-; Rule T101: Nodes with more than the specified number of fan-outs ; N_M1                                      ; 43      ;
-; Rule T101: Nodes with more than the specified number of fan-outs ; A[2]                                      ; 36      ;
-; Rule T101: Nodes with more than the specified number of fan-outs ; A[4]                                      ; 36      ;
-; Rule T101: Nodes with more than the specified number of fan-outs ; A[5]                                      ; 31      ;
-; Rule T101: Nodes with more than the specified number of fan-outs ; N_WR                                      ; 33      ;
-; Rule T101: Nodes with more than the specified number of fan-outs ; memory:U1|vbus_mode                       ; 39      ;
-; Rule T101: Nodes with more than the specified number of fan-outs ; clk_7                                     ; 92      ;
-; Rule T101: Nodes with more than the specified number of fan-outs ; CLK14                                     ; 77      ;
-; Rule T101: Nodes with more than the specified number of fan-outs ; video:U5|chr_col_cnt[0]                   ; 61      ;
-; Rule T101: Nodes with more than the specified number of fan-outs ; video:U5|chr_col_cnt[1]                   ; 36      ;
-; Rule T101: Nodes with more than the specified number of fan-outs ; video:U5|chr_col_cnt[2]                   ; 34      ;
-; Rule T101: Nodes with more than the specified number of fan-outs ; A[0]                                      ; 46      ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; clk_7                                     ; 92      ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; CLK14                                     ; 77      ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; video:U5|chr_col_cnt[0]                   ; 61      ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; N_IORQ                                    ; 60      ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; A[1]                                      ; 47      ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; A[0]                                      ; 46      ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; N_M1                                      ; 43      ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; memory:U1|vbus_mode                       ; 39      ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; A[3]                                      ; 36      ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; A[2]                                      ; 36      ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; A[4]                                      ; 36      ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; video:U5|chr_col_cnt[1]                   ; 36      ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; A[7]                                      ; 36      ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; A[6]                                      ; 36      ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; video:U5|chr_col_cnt[2]                   ; 34      ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; A[15]                                     ; 33      ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; N_RD                                      ; 33      ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; N_WR                                      ; 33      ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; A[5]                                      ; 31      ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; A[14]                                     ; 24      ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; BUS_N_IORQGE                              ; 24      ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; video:U5|hor_cnt[3]                       ; 23      ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; video:U5|hor_cnt[4]                       ; 23      ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; video:U5|hor_cnt[2]                       ; 23      ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; video:U5|hor_cnt[1]                       ; 22      ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; video:U5|hor_cnt[0]                       ; 22      ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; video:U5|hor_cnt[5]                       ; 22      ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; memory:U1|vid_rd                          ; 21      ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; zcontroller:\G_ZC:U3|cnt[3]               ; 19      ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; trdos                                     ; 17      ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; video:U5|chr_row_cnt[0]                   ; 17      ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; A[9]                                      ; 16      ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; A[11]                                     ; 16      ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; A[10]                                     ; 16      ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; N_RESET                                   ; 16      ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; A[13]                                     ; 16      ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; A[8]                                      ; 16      ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; video:U5|chr_row_cnt[1]                   ; 16      ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; A[12]                                     ; 16      ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; video:U5|ver_cnt[4]                       ; 15      ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; video:U5|ver_cnt[3]                       ; 15      ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; video:U5|ver_cnt[1]                       ; 15      ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; video:U5|chr_row_cnt[2]                   ; 15      ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; video:U5|ver_cnt[2]                       ; 14      ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; video:U5|ver_cnt[0]                       ; 14      ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; video:U5|ver_cnt[5]                       ; 12      ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; video:U5|attr_r[7]                        ; 9       ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; port_7ffd[5]                              ; 9       ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; N_MREQ                                    ; 9       ;
-; Rule T102: Top nodes with the highest number of fan-outs         ; video:U5|lpm_counter:invert_rtl_0|dffs[4] ; 8       ;
-+------------------------------------------------------------------+-------------------------------------------+---------+
++----------------------------------------------------------------------------------------------------------------------------+
+; Medium Violations                                                                                                          ;
++----------------------------------------------------------------------------------------------+-----------------------------+
+; Rule name                                                                                    ; Name                        ;
++----------------------------------------------------------------------------------------------+-----------------------------+
+; Rule C106: Clock signal source should not drive registers triggered by different clock edges ; CLK14                       ;
+;  Positive edge destination node(s) list                                                      ; zc_spi:U_ZC_SPI|SHIFT_IN[0] ;
+;  Positive edge destination node(s) list                                                      ; zc_spi:U_ZC_SPI|SHIFT_IN[1] ;
+;  Positive edge destination node(s) list                                                      ; zc_spi:U_ZC_SPI|SHIFT_IN[2] ;
+;  Positive edge destination node(s) list                                                      ; zc_spi:U_ZC_SPI|SHIFT_IN[3] ;
+;  Positive edge destination node(s) list                                                      ; zc_spi:U_ZC_SPI|SHIFT_IN[4] ;
+;  Positive edge destination node(s) list                                                      ; zc_spi:U_ZC_SPI|SHIFT_IN[5] ;
+;  Positive edge destination node(s) list                                                      ; zc_spi:U_ZC_SPI|SHIFT_IN[6] ;
+;  Positive edge destination node(s) list                                                      ; zc_spi:U_ZC_SPI|SHIFT_IN[7] ;
+;  Negative edge destination node(s) list                                                      ; zc_spi:U_ZC_SPI|COUNTER[3]  ;
++----------------------------------------------------------------------------------------------+-----------------------------+
+
+
++---------------------------------------------------------------------------------------------------------+
+; Information only Violations                                                                             ;
++------------------------------------------------------------------+----------------------------+---------+
+; Rule name                                                        ; Name                       ; Fan-Out ;
++------------------------------------------------------------------+----------------------------+---------+
+; Rule T101: Nodes with more than the specified number of fan-outs ; A[2]                       ; 32      ;
+; Rule T101: Nodes with more than the specified number of fan-outs ; A[4]                       ; 36      ;
+; Rule T101: Nodes with more than the specified number of fan-outs ; A[7]                       ; 35      ;
+; Rule T101: Nodes with more than the specified number of fan-outs ; A[3]                       ; 32      ;
+; Rule T101: Nodes with more than the specified number of fan-outs ; A[5]                       ; 33      ;
+; Rule T101: Nodes with more than the specified number of fan-outs ; A[6]                       ; 33      ;
+; Rule T101: Nodes with more than the specified number of fan-outs ; A[0]                       ; 42      ;
+; Rule T101: Nodes with more than the specified number of fan-outs ; A[1]                       ; 43      ;
+; Rule T101: Nodes with more than the specified number of fan-outs ; N_IORQ                     ; 51      ;
+; Rule T101: Nodes with more than the specified number of fan-outs ; N_M1                       ; 52      ;
+; Rule T101: Nodes with more than the specified number of fan-outs ; A[14]                      ; 35      ;
+; Rule T101: Nodes with more than the specified number of fan-outs ; A[15]                      ; 44      ;
+; Rule T101: Nodes with more than the specified number of fan-outs ; memory:U1|vbus_mode        ; 40      ;
+; Rule T101: Nodes with more than the specified number of fan-outs ; clk_7                      ; 70      ;
+; Rule T101: Nodes with more than the specified number of fan-outs ; CLK14                      ; 105     ;
+; Rule T101: Nodes with more than the specified number of fan-outs ; video:U5|chr_col_cnt[0]    ; 61      ;
+; Rule T101: Nodes with more than the specified number of fan-outs ; A[13]                      ; 31      ;
+; Rule T101: Nodes with more than the specified number of fan-outs ; video:U5|chr_col_cnt[1]    ; 36      ;
+; Rule T101: Nodes with more than the specified number of fan-outs ; video:U5|chr_col_cnt[2]    ; 34      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; CLK14                      ; 105     ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; clk_7                      ; 70      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; video:U5|chr_col_cnt[0]    ; 61      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; N_M1                       ; 52      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; N_IORQ                     ; 51      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; A[15]                      ; 44      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; A[1]                       ; 43      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; A[0]                       ; 42      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; memory:U1|vbus_mode        ; 40      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; A[4]                       ; 36      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; video:U5|chr_col_cnt[1]    ; 36      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; A[7]                       ; 35      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; A[14]                      ; 35      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; video:U5|chr_col_cnt[2]    ; 34      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; A[5]                       ; 33      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; A[6]                       ; 33      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; A[2]                       ; 32      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; A[3]                       ; 32      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; A[13]                      ; 31      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; N_RD                       ; 29      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; N_WR                       ; 27      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; SW[0]                      ; 24      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; N_RESET                    ; 24      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; A[9]                       ; 23      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; A[8]                       ; 23      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; A[11]                      ; 23      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; video:U5|hor_cnt[3]        ; 23      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; A[12]                      ; 23      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; A[10]                      ; 23      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; video:U5|hor_cnt[2]        ; 23      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; video:U5|hor_cnt[4]        ; 23      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; video:U5|hor_cnt[1]        ; 22      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; video:U5|hor_cnt[5]        ; 22      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; video:U5|hor_cnt[0]        ; 22      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; BUS_N_IORQGE               ; 22      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; memory:U1|vid_rd           ; 21      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; N_MREQ                     ; 18      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; zc_spi:U_ZC_SPI|COUNTER[3] ; 18      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; video:U5|chr_row_cnt[0]    ; 17      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; trdos                      ; 16      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; video:U5|chr_row_cnt[1]    ; 16      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; video:U5|ver_cnt[1]        ; 15      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; video:U5|chr_row_cnt[2]    ; 15      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; video:U5|ver_cnt[3]        ; 15      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; video:U5|ver_cnt[4]        ; 15      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; video:U5|ver_cnt[2]        ; 14      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; video:U5|ver_cnt[0]        ; 14      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; video:U5|ver_cnt[5]        ; 12      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; automap                    ; 10      ;
+; Rule T102: Top nodes with the highest number of fan-outs         ; port_7ffd[5]               ; 9       ;
++------------------------------------------------------------------+----------------------------+---------+
 
 
 +---------------------------+
@@ -276,77 +285,79 @@ applicable agreement for further details.
 Info: *******************************************************************
 Info: Running Quartus II 32-bit Design Assistant
     Info: Version 13.0.1 Build 232 06/12/2013 Service Pack 1 SJ Web Edition
-    Info: Processing started: Mon May 11 17:52:05 2026
+    Info: Processing started: Mon May 11 19:16:15 2026
 Info: Command: quartus_drc --read_settings_files=off --write_settings_files=off vspider -c vspider
 Warning (335095): TimeQuest Timing Analyzer does not support the analysis of latches as synchronous elements for the currently selected device family.
 Info (332104): Reading SDC File: 'vspider.sdc'
 Warning (332153): Family doesn't support jitter analysis.
 Warning (332060): Node: memory:U1|vbus_mode was determined to be a clock but was found without an associated clock assignment.
-Critical Warning (308073): (High) Rule S101: Output enable and input of the same tri-state node should not be driven by same signal source. Found 8 node(s) related to this rule.
-    Critical Warning (308012): Node  "D[0]"
-    Critical Warning (308012): Node  "D[4]"
+Warning (332060): Node: N_MREQ was determined to be a clock but was found without an associated clock assignment.
+Critical Warning (308073): (High) Rule S101: Output enable and input of the same tri-state node should not be driven by same signal source. Found 7 node(s) related to this rule.
+    Critical Warning (308012): Node  "D[7]"
     Critical Warning (308012): Node  "D[5]"
+    Critical Warning (308012): Node  "D[4]"
     Critical Warning (308012): Node  "D[1]"
     Critical Warning (308012): Node  "D[2]"
     Critical Warning (308012): Node  "D[3]"
     Critical Warning (308012): Node  "D[6]"
-    Critical Warning (308012): Node  "D[7]"
+Warning (308022): (Medium) Rule C106: Clock signal source should not drive registers triggered by different clock edges. Found 1 node(s) related to this rule.
+    Warning (308010): Node  "CLK14"
 Info (308046): (Information) Rule T101: Nodes with more than the specified number of fan-outs. (Value defined:30). Found 19 node(s) with highest fan-out.
-    Info (308011): Node  "A[15]"
-    Info (308011): Node  "N_RD"
-    Info (308011): Node  "A[1]"
-    Info (308011): Node  "A[3]"
-    Info (308011): Node  "A[6]"
-    Info (308011): Node  "A[7]"
-    Info (308011): Node  "N_IORQ"
-    Info (308011): Node  "N_M1"
     Info (308011): Node  "A[2]"
     Info (308011): Node  "A[4]"
-    Info (308011): Node  "A[5]"
-    Info (308011): Node  "N_WR"
-    Info (308011): Node  "memory:U1|vbus_mode"
-    Info (308011): Node  "clk_7"
-    Info (308011): Node  "CLK14"
-    Info (308011): Node  "video:U5|chr_col_cnt[0]"
-    Info (308011): Node  "video:U5|chr_col_cnt[1]"
-    Info (308011): Node  "video:U5|chr_col_cnt[2]"
-    Info (308011): Node  "A[0]"
-Info (308044): (Information) Rule T102: Top nodes with the highest number of fan-outs. (Value defined:50). Found 50 node(s) with highest fan-out.
-    Info (308011): Node  "clk_7"
-    Info (308011): Node  "CLK14"
-    Info (308011): Node  "video:U5|chr_col_cnt[0]"
-    Info (308011): Node  "N_IORQ"
-    Info (308011): Node  "A[1]"
-    Info (308011): Node  "A[0]"
-    Info (308011): Node  "N_M1"
-    Info (308011): Node  "memory:U1|vbus_mode"
-    Info (308011): Node  "A[3]"
-    Info (308011): Node  "A[2]"
-    Info (308011): Node  "A[4]"
-    Info (308011): Node  "video:U5|chr_col_cnt[1]"
     Info (308011): Node  "A[7]"
-    Info (308011): Node  "A[6]"
-    Info (308011): Node  "video:U5|chr_col_cnt[2]"
-    Info (308011): Node  "A[15]"
-    Info (308011): Node  "N_RD"
-    Info (308011): Node  "N_WR"
+    Info (308011): Node  "A[3]"
     Info (308011): Node  "A[5]"
+    Info (308011): Node  "A[6]"
+    Info (308011): Node  "A[0]"
+    Info (308011): Node  "A[1]"
+    Info (308011): Node  "N_IORQ"
+    Info (308011): Node  "N_M1"
     Info (308011): Node  "A[14]"
-    Info (308011): Node  "BUS_N_IORQGE"
+    Info (308011): Node  "A[15]"
+    Info (308011): Node  "memory:U1|vbus_mode"
+    Info (308011): Node  "clk_7"
+    Info (308011): Node  "CLK14"
+    Info (308011): Node  "video:U5|chr_col_cnt[0]"
+    Info (308011): Node  "A[13]"
+    Info (308011): Node  "video:U5|chr_col_cnt[1]"
+    Info (308011): Node  "video:U5|chr_col_cnt[2]"
+Info (308044): (Information) Rule T102: Top nodes with the highest number of fan-outs. (Value defined:50). Found 50 node(s) with highest fan-out.
+    Info (308011): Node  "CLK14"
+    Info (308011): Node  "clk_7"
+    Info (308011): Node  "video:U5|chr_col_cnt[0]"
+    Info (308011): Node  "N_M1"
+    Info (308011): Node  "N_IORQ"
+    Info (308011): Node  "A[15]"
+    Info (308011): Node  "A[1]"
+    Info (308011): Node  "A[0]"
+    Info (308011): Node  "memory:U1|vbus_mode"
+    Info (308011): Node  "A[4]"
+    Info (308011): Node  "video:U5|chr_col_cnt[1]"
+    Info (308011): Node  "A[7]"
+    Info (308011): Node  "A[14]"
+    Info (308011): Node  "video:U5|chr_col_cnt[2]"
+    Info (308011): Node  "A[5]"
+    Info (308011): Node  "A[6]"
+    Info (308011): Node  "A[2]"
+    Info (308011): Node  "A[3]"
+    Info (308011): Node  "A[13]"
+    Info (308011): Node  "N_RD"
+    Info (308011): Node  "N_WR"
+    Info (308011): Node  "SW[0]"
+    Info (308011): Node  "N_RESET"
+    Info (308011): Node  "A[9]"
+    Info (308011): Node  "A[8]"
+    Info (308011): Node  "A[11]"
     Info (308011): Node  "video:U5|hor_cnt[3]"
-    Info (308011): Node  "video:U5|hor_cnt[4]"
+    Info (308011): Node  "A[12]"
+    Info (308011): Node  "A[10]"
     Info (308011): Node  "video:U5|hor_cnt[2]"
-    Info (308011): Node  "video:U5|hor_cnt[1]"
-    Info (308011): Node  "video:U5|hor_cnt[0]"
-    Info (308011): Node  "video:U5|hor_cnt[5]"
-    Info (308011): Node  "memory:U1|vid_rd"
-    Info (308011): Node  "zcontroller:\G_ZC:U3|cnt[3]"
-    Info (308011): Node  "trdos"
     Info (308002): Truncated list of Design Assistant messages to 30 messages. Go to sections under Design Assistant section of Compilation Report for complete lists of Design Assistant messages generated.
 Info (308007): Design Assistant information: finished post-fitting analysis of current design -- generated 69 information messages and 8 warning messages
-Info: Quartus II 32-bit Design Assistant was successful. 0 errors, 12 warnings
+Info: Quartus II 32-bit Design Assistant was successful. 0 errors, 14 warnings
     Info: Peak virtual memory: 284 megabytes
-    Info: Processing ended: Mon May 11 17:52:06 2026
+    Info: Processing ended: Mon May 11 19:16:16 2026
     Info: Elapsed time: 00:00:01
     Info: Total CPU time (on all processors): 00:00:01
 

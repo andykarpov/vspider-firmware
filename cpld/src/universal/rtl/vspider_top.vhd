@@ -8,13 +8,6 @@ use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 
 entity vspider_top is
-generic (
-    -- global configuration
-    enable_divmmc       : boolean := false;   -- enable DivMMC
-    enable_zcontroller  : boolean := true;  -- enable Z-Controller
-    enable_trdos        : boolean := true;  -- enable TR-DOS
-    enable_service_boot : boolean := true   -- boot into the service rom (when z-controller and tr-dos are enabled)
-);
 port(
     -- Clock
     CLK14               : in std_logic;
@@ -130,37 +123,42 @@ architecture rtl of vspider_top is
     signal port_read    : std_logic := '0';
     signal port_write   : std_logic := '0';
     
-    signal divmmc_do    : std_logic_vector(7 downto 0);    
-    signal divmmc_ram   : std_logic;
-    signal divmmc_rom   : std_logic;
-    
-    signal divmmc_disable_zxrom : std_logic;
-    signal divmmc_eeprom_cs_n   : std_logic;
-    signal divmmc_eeprom_we_n   : std_logic;
-    signal divmmc_sram_cs_n     : std_logic;
-    signal divmmc_sram_we_n     : std_logic;
-    signal divmmc_sram_hiaddr   : std_logic_vector(5 downto 0);
-    signal divmmc_sd_cs_n       : std_logic;
-    signal divmmc_wr            : std_logic;
-    signal divmmc_sd_di         : std_logic;
-    signal divmmc_sd_clk        : std_logic;
-    
-    signal zc_do_bus     : std_logic_vector(7 downto 0);
-    signal zc_wr         : std_logic :='0';
-    signal zc_rd         : std_logic :='0';
-    signal zc_sd_cs_n    : std_logic;
-    signal zc_sd_di      : std_logic;
-    signal zc_sd_clk     : std_logic;
-    
-    signal trdos         : std_logic :='0';    
+    signal trdos         : std_logic :='0'; 
+	 
+	-- Z-Controller
+	signal zc_do_bus		: std_logic_vector(7 downto 0);
+	signal zc_spi_start	: std_logic;
+	signal zc_wr_en		: std_logic;
+	signal port77_wr		: std_logic;
+
+	signal zc_cs_n			: std_logic;
+	signal zc_sclk			: std_logic;
+	signal zc_mosi			: std_logic;
+	signal zc_miso			: std_logic;
+
+	--- DivMMC
+	signal divmmc_en		: std_logic;
+	signal automap			: std_logic;
+	signal port_e3_reg   : std_logic_vector(7 downto 0);
+	signal mapterm 		: std_logic;
+	signal map3DXX 		: std_logic; 
+	signal map1F00 		: std_logic;
+	signal mapcond 		: std_logic;
 begin
 
-    divmmc_rom <= '1' when (divmmc_disable_zxrom = '1' and divmmc_eeprom_cs_n = '0') else '0';
-    divmmc_ram <= '1' when (divmmc_disable_zxrom = '1' and divmmc_sram_cs_n = '0') else '0';
-    
-    BEEPER <= sound_out;
-    
-    N_NMI <= '0' when BTN_NMI = '0' else 'Z';
+    BEEPER <= sound_out;    
+	 
+	 divmmc_en <= SW(0);
+
+	-- magic button signal for divmmc / trdos
+	 N_NMI <= mapcond when BTN_NMI = '0' and divmmc_en = '1' else 
+		'0' when divmmc_en = '0' and BTN_NMI = '0' and N_M1 = '0' and N_MREQ = '0' and A(15 downto 14) /= "00" else 
+   	'1';
+		
+	-- SD
+	SD_N_CS	<= zc_cs_n;
+	SD_CLK 	<= zc_sclk;
+	SD_DI 	<= zc_mosi;	
 	 
 	 -- AY
 	process(CLK14, N_RESET)
@@ -183,9 +181,6 @@ begin
 	 
 	 -- kempston joy
 	 KEMPSTON_CS_N <= '0' when (N_IORQ = '0' and N_RD = '0' and N_M1 = '1' and A(7 downto 0) = X"1F" and trdos = '0') else '1'; -- Joystick, port #1F
-	
-	 -- high rom bank related to SW[0]
-	 ROM_SW <= SW(0);
 	
     -- CPU clock 
     process( N_RESET, clk14, clk_7, hcnt0 )
@@ -211,18 +206,12 @@ begin
         ram_do when ram_oe_n = '0' else -- #memory
         --'1' & TAPE_IN & '1' & kb(4 downto 0) when port_read = '1' and A(0) = '0' else -- #FE - keyboard 
 		  '1' & TAPE_IN & '1' & kb(4) & sw(1) & kb(2 downto 0) when port_read = '1' and A(0) = '0' else -- #FE - keyboard 
-        divmmc_do when enable_divmmc and divmmc_wr = '1' else -- divmmc
-        zc_do_bus when enable_zcontroller and port_read = '1' and A(7 downto 6) = "01" and A(4 downto 0) = "10111" else -- ZC
+		  zc_do_bus when port_read = '1' and (A(7 downto 0) = x"57" or (A(7 downto 0) = x"EB" and divmmc_en = '1')) else -- ZC / DivMMC
+		  "11111100" when port_read = '1' and A(7 downto 0) = x"77" else -- ZC Status port
         port_7ffd when trdos = '1' and port_read = '1' and A = x"7FFD" else -- #7FFD
         attr_r when port_read = '1' and A(7 downto 0) = x"FF" else -- #FF
         "ZZZZZZZZ";
-		  
-    -- z-controller 
-    G_ZC_SIG: if enable_zcontroller generate
-        zc_wr <= '1' when (N_IORQ = '0' and N_WR = '0' and A(7 downto 6) = "01" and A(4 downto 0) = "10111") else '0';
-        zc_rd <= '1' when (N_IORQ = '0' and N_RD = '0' and A(7 downto 6) = "01" and A(4 downto 0) = "10111") else '0';
-    end generate G_ZC_SIG;
-    
+	
     -- clocks
     process (clk14)
     begin 
@@ -237,9 +226,16 @@ begin
         if N_RESET = '0' then
             port_7ffd <= "00000000";
             sound_out <= '0';
+				port_e3_reg(5 downto 0) <= (others => '0');
+				port_e3_reg(7) <= '0';
         elsif clk14'event and clk14 = '1' then 
             if port_write = '1' then
 
+					-- xxE3
+					if (A(7 downto 0) = X"E3" and divmmc_en = '1') then	
+						port_e3_reg <= D(7) & (port_e3_reg(6) or D(6)) & D(5 downto 0);
+					end if;					
+				
                  -- port #7FFD  
                 if A(15)='0' and A(1) = '0' and port_7ffd(5) = '0' then -- short decoding #FD                    
                     port_7ffd <= D;
@@ -254,34 +250,112 @@ begin
                                     
             end if;
         end if;
-    end process;    
+    end process;
+
+	-- Z-controller + DIVMMC spi 
+	zc_spi_start <= '1' when (A(7 downto 0) = X"57" or (A(7 downto 0) = X"EB" and divmmc_en = '1')) and N_IORQ='0' and N_M1='1' else '0';
+	zc_wr_en <= '1' when (A(7 downto 0) = X"57" or (A(7 downto 0) = X"EB" and divmmc_en = '1')) and N_IORQ='0' and N_M1='1' and N_WR='0' else '0';
+	port77_wr <= '1' when (A(7 downto 0) = X"77" or (A(7 downto 0) = X"E7" and divmmc_en = '1')) and N_IORQ='0' and N_M1='1' and N_WR='0' else '0';
+
+	process (port77_wr, N_RESET, CLK14)
+	begin
+		if N_RESET='0' then
+			zc_cs_n <= '1';
+		elsif CLK14'event and CLK14='1' then
+			--- DIVMMC uses 0 bit to control zc_cs_n, instead of 1 bit ZController. 
+			--- Lets check port number and select correct bit
+			if port77_wr='1' then
+				if A(7 downto 0) = X"E7" then
+					zc_cs_n <= D(0);
+				else
+					zc_cs_n <= D(1);
+				end if;
+			end if;
+		end if;
+	end process;
+
+	U_ZC_SPI: entity work.zc_spi     -- SD
+	port map(
+		DI				=> D,
+		START			=> zc_spi_start,
+		WR_EN			=> zc_wr_en,
+		CLC     		=> CLK14,
+		MISO    		=> SD_DO,
+		DO				=> zc_do_bus,
+		SCK     		=> zc_sclk,
+		MOSI    		=> zc_mosi
+	);
+	
+	------------------------ divmmc-----------------------------
+	-- Engineer:   Mario Prato
+
+	process (N_RESET, divmmc_en, A)
+	begin
+		if N_RESET = '0' or divmmc_en = '0' then 
+			mapterm <= '0';
+			map3DXX <= '0';
+			map1F00 <= '1';
+		else
+			 if A(15 downto 0) = x"0000"   or 
+				A(15 downto 0) = x"0008"   or 
+				A(15 downto 0) = x"0038"   or 
+				A(15 downto 0) = x"0066"   or 
+				A(15 downto 0) = x"04c6"   or 
+				A(15 downto 0) = x"0562" then 
+					mapterm <= '1';
+			else 
+				mapterm <= '0';
+			end if;	
+
+			-- mappa 3D00 - 3DFF
+			if A(15 downto 8) = "00111101" then 
+				map3DXX <= '1'; 
+			else 
+				map3DXX <= '0';
+			end if; 
+
+			-- 1ff8 - 1fff
+			if A(15 downto 3) =   "0001111111111" then 
+				map1F00 <= '0';
+			else 
+				map1F00 <= '1';
+			end if; 
+		end if;
+	end process;
+
+	process(N_RESET, divmmc_en, N_MREQ, N_M1, mapcond, mapterm, map3DXX, map1F00, automap)
+	begin
+		if N_RESET = '0' or divmmc_en = '0' then 
+			mapcond <= '0';
+			automap <= '0';
+		elsif falling_edge(N_MREQ) then
+				if N_M1 = '0' then
+					 mapcond <= (mapterm or map3DXX or (mapcond and map1F00)) and divmmc_en;
+					 automap <= (mapcond or map3DXX) and divmmc_en;
+			  end if;
+		end if;	  
+	end process; 
     
-    -- trdos flag
-    G_TRDOS_FLAG: if enable_trdos generate    
-        process(clk14, N_RESET, N_M1, N_MREQ)
-        begin 
-            if N_RESET = '0' then 
-                if (enable_service_boot) then 
-                    trdos <= '1'; -- 1 - boot into service rom, 0 - boot into 128 menu
-                else 
-                    trdos <= '0';
-                end if;
-            elsif clk14'event and clk14 = '1' then 
-                if N_M1 = '0' and N_MREQ = '0' and A(15 downto 8) = X"3D" and port_7ffd(4) = '1' then 
-                    trdos <= '1';
-                elsif N_M1 = '0' and N_MREQ = '0' and A(15 downto 14) /= "00" then 
-                    trdos <= '0'; 
-                end if;
-            end if;
-        end process;
-    end generate G_TRDOS_FLAG;
+    -- trdos flag (not in divmmc mode)
+	  process(clk14, N_RESET, N_M1, N_MREQ)
+	  begin 
+			if N_RESET = '0' then 
+				 if (divmmc_en = '0') then 
+					  trdos <= '1'; -- 1 - boot into service rom, 0 - boot into 128 menu
+				 else 
+					  trdos <= '0';
+				 end if;
+			elsif clk14'event and clk14 = '1' then 
+				 if divmmc_en = '0' and N_M1 = '0' and N_MREQ = '0' and A(15 downto 8) = X"3D" and port_7ffd(4) = '1' then 
+					  trdos <= '1';
+				 elsif divmmc_en = '0' and N_M1 = '0' and N_MREQ = '0' and A(15 downto 14) /= "00" then 
+					  trdos <= '0'; 
+				 end if;
+			end if;
+	  end process;
 
     -- memory manager
     U1: entity work.memory 
-    generic map (
-        enable_divmmc => enable_divmmc,
-        enable_zcontroller => enable_zcontroller
-    )
     port map ( 
         CLK14 => CLK14,
         CLK7  => CLK_7,
@@ -310,10 +384,12 @@ begin
         -- ram pages
         RAM_BANK => port_7ffd(2 downto 0),
 
-        -- divmmc
-        DIVMMC_A => divmmc_sram_hiaddr,
-        IS_DIVMMC_RAM => divmmc_ram,
-        IS_DIVMMC_ROM => divmmc_rom,
+		-- DIVMMC signals
+		DIVMMC_EN		=> divmmc_en,
+		AUTOMAP			=> automap,
+		REG_E3		   => port_e3_reg,
+		ROM_SW			=> ROM_SW,
+		TEST 				=> not SW(2),
 
         -- video
         VA => vid_a,
@@ -332,64 +408,6 @@ begin
         ROM_A15 => ROM_A15,
         N_ROMCS => N_ROMCS        
     );
-    
-    -- divmmc interface
-    G_DIVMMC: if enable_divmmc generate
-        U2: entity work.divmmc
-        port map (
-            I_CLK        => clkcpu,
-            I_CS        => '1',
-            I_RESET        => not(N_RESET),
-            I_ADDR        => A,
-            I_DATA        => D,
-            O_DATA        => divmmc_do,
-            I_WR_N        => N_WR,
-            I_RD_N        => N_RD,
-            I_IORQ_N        => N_IORQ,
-            I_MREQ_N        => N_MREQ,
-            I_M1_N        => N_M1,
-            
-            O_WR                  => divmmc_wr,
-            O_DISABLE_ZXROM => divmmc_disable_zxrom,
-            O_EEPROM_CS_N      => divmmc_eeprom_cs_n,
-            O_EEPROM_WE_N      => divmmc_eeprom_we_n,
-            O_SRAM_CS_N      => divmmc_sram_cs_n,
-            O_SRAM_WE_N      => divmmc_sram_we_n,
-            O_SRAM_HIADDR     => divmmc_sram_hiaddr,
-            
-            O_CS_N        => divmmc_sd_cs_n,
-            O_SCLK        => divmmc_sd_clk,
-            O_MOSI        => divmmc_sd_di,
-            I_MISO        => SD_DO);
-
-        SD_N_CS <= divmmc_sd_cs_n;
-        SD_CLK <= divmmc_sd_clk;
-        SD_DI <= divmmc_sd_di;
-    end generate G_DIVMMC;
-        
-    -- Z-Controller
-    G_ZC: if enable_zcontroller generate
-        U3: entity work.zcontroller 
-        port map(
-            RESET => not(N_RESET),
-            CLK => clk_7,
-            A => A(5),
-            DI => D,
-            DO => zc_do_bus,
-            RD => zc_rd,
-            WR => zc_wr,
-            SDDET => '0',
-            SDPROT => '0',
-            CS_n => zc_sd_cs_n,
-            SCLK => zc_sd_clk,
-            MOSI => zc_sd_di,
-            MISO => SD_DO
-        );
-        
-        SD_N_CS <= zc_sd_cs_n;
-        SD_CLK <= zc_sd_clk;
-        SD_DI <= zc_sd_di;
-    end generate G_ZC;
     
     -- video module
     U5: entity work.video 

@@ -4,10 +4,6 @@ use IEEE.std_logic_arith.conv_integer;
 use IEEE.numeric_std.all;
 
 entity memory is
-generic (
-    enable_divmmc      : boolean := true;
-    enable_zcontroller : boolean := false
-);
 port (
     CLK14              : in std_logic;
     CLK7               : in std_logic;
@@ -32,9 +28,11 @@ port (
     
     RAM_BANK           : in std_logic_vector(2 downto 0);
     
-    DIVMMC_A           : in std_logic_vector(5 downto 0);
-    IS_DIVMMC_RAM      : in std_logic;
-    IS_DIVMMC_ROM      : in std_logic;
+    DIVMMC_EN          : in std_logic;
+    AUTOMAP            : in std_logic;
+    REG_E3             : in std_logic_vector(7 downto 0);
+	 ROM_SW				  : out std_logic;
+	 TEST					  : in std_logic;
     
     TRDOS              : in std_logic;
     
@@ -54,10 +52,13 @@ end memory;
 architecture RTL of memory is
 
     signal buf_md      : std_logic_vector(7 downto 0) := "11111111";
-    signal is_buf_wr   : std_logic := '0';    
+    signal is_buf_wr   : std_logic := '0';
     
     signal is_rom      : std_logic := '0';
     signal is_ram      : std_logic := '0';
+	 
+    signal is_romDIVMMC: std_logic := '0';
+    signal is_ramDIVMMC: std_logic := '0';
     
     signal rom_page    : std_logic_vector(1 downto 0) := "00";
     signal ram_page    : std_logic_vector(4 downto 0) := "00000";
@@ -69,20 +70,28 @@ architecture RTL of memory is
     signal vbus_ack    : std_logic := '1';
 begin
 
-    is_rom <= '1' when N_MREQ = '0' and ((A(15 downto 14)  = "00" and IS_DIVMMC_ROM = '0' and IS_DIVMMC_RAM = '0') or IS_DIVMMC_ROM = '1') else '0';
-    is_ram <= '1' when N_MREQ = '0' and ((A(15 downto 14) /= "00" and IS_DIVMMC_ROM = '0' and IS_DIVMMC_RAM = '0') or IS_DIVMMC_RAM = '1') else '0';
+	---DIVMMC signaling when we must map rom or ram of DIVMMC interface to Z80 adress space
+	is_romDIVMMC <= '1' when DIVMMC_EN = '1' and N_MREQ = '0' and (AUTOMAP ='1' or REG_E3(7) = '1') and A(15 downto 13) = "000" else '0';
+	is_ramDIVMMC <= '1' when DIVMMC_EN = '1' and N_MREQ = '0' and (AUTOMAP ='1' or REG_E3(7) = '1') and A(15 downto 13) = "001" else '0';
+	
+	is_rom <= '1' when N_MREQ = '0' and A(15 downto 14) = "00" else '0';
+	is_ram <= '1' when N_MREQ = '0' and is_rom = '0' else '0';
     
     -- 00 - bank 0, ESXDOS 0.8.7 or GLUK
-    -- 01 - bank 1, empty or TRDOS
+    -- 01 - bank 1, TEST or TRDOS
     -- 10 - bank 2, Basic-128
     -- 11 - bank 3, Basic-48
-    rom_page <= "00" when enable_divmmc and IS_DIVMMC_ROM = '1' else 
-        (not(TRDOS)) & ROM_BANK when enable_zcontroller else
-        '1' & ROM_BANK;
+	 rom_page <= 
+		"01" when TEST = '1' else -- test rom from esxdos bank
+		(not(TRDOS)) & ROM_BANK when DIVMMC_EN = '0' else -- gluk / trdos / basic128 / basic48		
+		not(is_romDIVMMC) & ROM_BANK; -- esxdos / empty / basic128 / basic48
         
     ROM_A14 <= rom_page(0);
-    ROM_A15 <= rom_page(1);    
+    ROM_A15 <= rom_page(1);
     N_ROMCS <= '0' when is_rom = '1' and N_RD = '0' and BUS_N_ROMCS = '0' else '1';
+	 ROM_SW <= '1' when TEST = '1' else DIVMMC_EN; 
+		-- 0 - gluk, trdos, basic128, basic48
+		-- 1 - esxdos, test, basic128, basic48
 
     vbus_req <= '0' when ( N_MREQ = '0' or N_IORQ = '0' ) and ( N_WR = '0' or N_RD = '0' ) else '1';
     vbus_rdy <= '0' when (CLK7 = '0' or HCNT0 = '0') else '1';
@@ -91,34 +100,33 @@ begin
     VID_RD_O <= vid_rd;
     
     N_MRD <= '0' when (vbus_mode = '1' and vbus_rdy = '0') or (vbus_mode = '0' and N_RD = '0' and N_MREQ = '0') else '1';  
-    N_MWR <= '0' when vbus_mode = '0' and is_ram = '1' and N_WR = '0' and HCNT0 = '0' else '1';
+    N_MWR <= '0' when vbus_mode = '0' and(is_ram = '1' or is_ramDIVMMC = '1') and N_WR = '0' and HCNT0 = '0' else '1';
 
     is_buf_wr <= '1' when vbus_mode = '0' and HCNT0 = '0' else '0';
     
     DO <= buf_md;
-    N_OE <= '0' when is_ram = '1' and N_RD = '0' else '1';
+    N_OE <= '0' when (is_ram = '1' or is_ramDIVMMC = '1') and N_RD = '0' else '1';
         
     -- memory map for RAM = 128k
     ram_page <=    
-                "01" & DIVMMC_A(3 downto 1) when IS_DIVMMC_RAM = '1' else -- 128KB DivMMC RAM
-                "00000" when A(15) = '0' and A(14) = '0' else
-                "00101" when A(15) = '0' and A(14) = '1' else
-                "00010" when A(15) = '1' and A(14) = '0' else
-                "00" & RAM_BANK(2 downto 0);
+		 "00000" when A(15) = '0' and A(14) = '0' else
+		 "00101" when A(15) = '0' and A(14) = '1' else
+		 "00010" when A(15) = '1' and A(14) = '0' else
+		 "00" & RAM_BANK(2 downto 0);
     
     MA(13 downto 0) <= 
-        DIVMMC_A(0) & A(12 downto 0) when vbus_mode = '0' and IS_DIVMMC_RAM = '1' else -- divmmc ram 
-        A(13 downto 0) when vbus_mode = '0' else -- spectrum ram 
+        REG_E3(0) & A(12 downto 0) when vbus_mode = '0' and is_ramDIVMMC = '1' else -- DIVMMC ram
+        A(13 downto 0) when vbus_mode = '0' else -- spectrum ram
         VA; -- video ram
 
-    MA(14) <= ram_page(0) when vbus_mode = '0' else '1';
-    MA(15) <= ram_page(1) when vbus_mode = '0' else VID_PAGE;
-    MA(16) <= ram_page(2) when vbus_mode = '0' else '1';
-    MA(17) <= ram_page(3) when vbus_mode = '0' else '0';
-    MA(18) <= ram_page(4) when vbus_mode = '0' else '0';
+	 MA(18 downto 14) <= 
+		"10" & REG_E3(3 downto 1) when is_ramDIVMMC = '1' and vbus_mode = '0' else -- DIVMMC ram 128 kB from #X180000 SRAM
+		ram_page(4 downto 0) when vbus_mode = '0' else 
+		"001" & VID_PAGE & '1' when vbus_mode = '1' else -- spectrum screen
+		"00000";
     
     MD(7 downto 0) <= 
-        D(7 downto 0) when vbus_mode = '0' and ((is_ram = '1' or (N_IORQ = '0' and N_M1 = '1')) and N_WR = '0') else 
+        D(7 downto 0) when vbus_mode = '0' and ((is_ram = '1' or is_ramDIVMMC = '1' or (N_IORQ = '0' and N_M1 = '1')) and N_WR = '0') else 
         (others => 'Z');
         
     -- fill memory buf
