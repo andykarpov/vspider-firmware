@@ -384,12 +384,10 @@ begin
         -- ram pages
         RAM_BANK => port_7ffd(2 downto 0),
 
-		-- DIVMMC signals
-		DIVMMC_EN		=> divmmc_en,
-		AUTOMAP			=> automap,
-		REG_E3		   => port_e3_reg,
-		ROM_SW			=> ROM_SW,
-		TEST 				=> not SW(2),
+        -- DIVMMC signals
+        DIVMMC_EN => divmmc_en,
+        AUTOMAP   => automap,
+        REG_E3    => port_e3_reg,
 
         -- video
         VA => vid_a,
@@ -407,6 +405,8 @@ begin
         ROM_A14 => ROM_A14,
         ROM_A15 => ROM_A15,
         N_ROMCS => N_ROMCS        
+        ROM_SW  => ROM_SW,
+        TEST    => not SW(2),
     );
     
     -- video module
