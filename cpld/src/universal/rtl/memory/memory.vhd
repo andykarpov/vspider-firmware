@@ -27,6 +27,7 @@ port (
     N_MWR              : out std_logic;
     
     RAM_BANK           : in std_logic_vector(2 downto 0);
+	 RAM_EXT            : in std_logic_vector(1 downto 0) := "00";
     
     DIVMMC_EN          : in std_logic;
     AUTOMAP            : in std_logic;
@@ -111,11 +112,14 @@ begin
     N_OE <= '0' when (is_ram = '1' or is_ramDIVMMC = '1') and N_RD = '0' else '1';
         
     -- memory map for RAM = 128k
-    ram_page <=    
-		 "00000" when A(15) = '0' and A(14) = '0' else
-		 "00101" when A(15) = '0' and A(14) = '1' else
-		 "00010" when A(15) = '1' and A(14) = '0' else
-		 "00" & RAM_BANK(2 downto 0);
+    ram_page(2 downto 0) <=    
+		 "000" when A(15) = '0' and A(14) = '0' else
+		 "101" when A(15) = '0' and A(14) = '1' else
+		 "010" when A(15) = '1' and A(14) = '0' else
+		 RAM_BANK(2 downto 0);
+
+    -- pentagon-512 when in ZC mode		 
+	 ram_page(4 downto 3) <= RAM_EXT when divmmc_en = '0' else "00";
     
     MA(13 downto 0) <= 
         REG_E3(0) & A(12 downto 0) when vbus_mode = '0' and is_ramDIVMMC = '1' else -- DIVMMC ram

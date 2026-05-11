@@ -55,11 +55,11 @@ port(
     BEEPER              : out std_logic := '1';
 
     -- AY
-    CLK_AY              : out std_logic; -- not used by Atmega8
+    CLK_AY              : out std_logic;
     AY_BC1              : out std_logic;
     AY_BDIR             : out std_logic;
-    AY_A8_1             : out std_logic := '0'; -- todo
-    AY_A8_2             : out std_logic := '1'; -- todo
+    AY_A8_1             : out std_logic := '0'; 
+    AY_A8_2             : out std_logic := '1'; 
 
     -- SD card
     SD_CLK              : out std_logic := '0';
@@ -74,9 +74,9 @@ port(
     SW                  : in std_logic_vector(2 downto 0) := "111";
 
     -- kempston joy port
-    KEMPSTON_CS_N       : out std_logic := '1'; -- todo
+    KEMPSTON_CS_N       : out std_logic := '1';
 
-    -- something unknown on the ZX Edge slot
+    -- something special on the ZX Edge slot
     DRD                 : out std_logic := '0'; -- Y
     DWR                 : out std_logic := '0'; -- U
     MTR                 : out std_logic := '0'; -- V
@@ -103,6 +103,9 @@ architecture rtl of vspider_top is
                                                         -- D5 - 48k RAM lock, 1 - locked, 0 - extended memory enabled
                                                         -- D6 - not used
                                                         -- D7 - not used
+    signal port_dffd    : std_logic_vector(7 downto 0);
+    signal fd_port      : std_logic;
+    signal fd_sel       : std_logic;
                                                                       
     signal ram_do       : std_logic_vector(7 downto 0);
     signal ram_oe_n     : std_logic := '1';
@@ -180,7 +183,7 @@ begin
 	 AY_A8_2 <= ssg;
 	 
 	 -- kempston joy
-	 KEMPSTON_CS_N <= '0' when (N_IORQ = '0' and N_RD = '0' and N_M1 = '1' and A(7 downto 0) = X"1F" and trdos = '0') else '1'; -- Joystick, port #1F
+	 KEMPSTON_CS_N <= '0' when port_read = '1' and A(7 downto 0) = X"1F" and trdos = '0' else '1'; -- Joystick, port #1F
 	
     -- CPU clock 
     process( N_RESET, clk14, clk_7, hcnt0 )
@@ -205,11 +208,12 @@ begin
     D(7 downto 0) <= 
         ram_do when ram_oe_n = '0' else -- #memory
         '1' & TAPE_IN & '1' & kb(4 downto 0) when port_read = '1' and A(0) = '0' else -- #FE - keyboard 
-		  --'1' & TAPE_IN & '1' & kb(4) & sw(1) & kb(2 downto 0) when port_read = '1' and A(0) = '0' else -- #FE - keyboard 
+		  --'1' & TAPE_IN & '1' & kb(4) & sw(1) & kb(2 downto 0) when port_read = '1' and A(0) = '0' else -- #FE - keyboard (fix kb3)
 		  zc_do_bus when port_read = '1' and (A(7 downto 0) = x"57" or (A(7 downto 0) = x"EB" and divmmc_en = '1')) else -- ZC / DivMMC
 		  "11111100" when port_read = '1' and A(7 downto 0) = x"77" else -- ZC Status port
-        port_7ffd when trdos = '1' and port_read = '1' and A = x"7FFD" else -- #7FFD
-        attr_r when port_read = '1' and A(7 downto 0) = x"FF" else -- #FF
+        port_7ffd when port_read = '1' and A = x"7FFD" else -- #7FFD
+		  port_dffd when port_read = '1' and A = x"DFFD" else -- #DFFD
+        attr_r when port_read = '1' and A(7 downto 0) = x"FF" and trdos = '0' else -- #FF
         "ZZZZZZZZ";
 	
     -- clocks
@@ -219,12 +223,26 @@ begin
             clk_7 <= not(clk_7);
         end if;
     end process;
+	 
+    -- #FD port correction
+    -- IN A, (#FD) - read a value from a hardware port 
+    -- OUT (#FD), A - writes the value of the second operand into the port given by the first operand.
+    fd_sel <= '0' when D(7 downto 4) = "1101" and D(2 downto 0) = "011" else '1'; 
+    process(fd_sel, N_RESET, N_M1)
+    begin
+        if N_RESET='0' then
+            fd_port <= '1';
+        elsif rising_edge(N_M1) then 
+            fd_port <= fd_sel;
+        end if;
+    end process;
     
     -- ports, write by CPU
     process( clk14, clk_7, N_RESET, A, D, port_write, port_7ffd, N_M1, N_MREQ )
     begin
         if N_RESET = '0' then
             port_7ffd <= "00000000";
+				port_dffd <= "00000000";
             sound_out <= '0';
 				port_e3_reg(5 downto 0) <= (others => '0');
 				port_e3_reg(7) <= '0';
@@ -236,9 +254,14 @@ begin
 						port_e3_reg <= D(7) & (port_e3_reg(6) or D(6)) & D(5 downto 0);
 					end if;					
 				
-                 -- port #7FFD  
+                 -- port #FD  
                 if A(15)='0' and A(1) = '0' and port_7ffd(5) = '0' then -- short decoding #FD                    
                     port_7ffd <= D;
+                end if;
+					 
+                -- port #DFFD
+                if A = x"DFFD" and fd_port = '1' then
+                    port_dffd <= D;
                 end if;
 
                 -- port #FE
@@ -383,6 +406,7 @@ begin
         
         -- ram pages
         RAM_BANK => port_7ffd(2 downto 0),
+		  RAM_EXT => port_dffd(1 downto 0),
 
         -- DIVMMC signals
         DIVMMC_EN => divmmc_en,
@@ -404,9 +428,9 @@ begin
         ROM_BANK => port_7ffd(4),
         ROM_A14 => ROM_A14,
         ROM_A15 => ROM_A15,
-        N_ROMCS => N_ROMCS        
+        N_ROMCS => N_ROMCS,     
         ROM_SW  => ROM_SW,
-        TEST    => not SW(2),
+        TEST    => not SW(2)
     );
     
     -- video module
