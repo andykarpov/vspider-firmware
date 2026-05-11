@@ -204,8 +204,8 @@ begin
     -- read ports by CPU
     D(7 downto 0) <= 
         ram_do when ram_oe_n = '0' else -- #memory
-        --'1' & TAPE_IN & '1' & kb(4 downto 0) when port_read = '1' and A(0) = '0' else -- #FE - keyboard 
-		  '1' & TAPE_IN & '1' & kb(4) & sw(1) & kb(2 downto 0) when port_read = '1' and A(0) = '0' else -- #FE - keyboard 
+        '1' & TAPE_IN & '1' & kb(4 downto 0) when port_read = '1' and A(0) = '0' else -- #FE - keyboard 
+		  --'1' & TAPE_IN & '1' & kb(4) & sw(1) & kb(2 downto 0) when port_read = '1' and A(0) = '0' else -- #FE - keyboard 
 		  zc_do_bus when port_read = '1' and (A(7 downto 0) = x"57" or (A(7 downto 0) = x"EB" and divmmc_en = '1')) else -- ZC / DivMMC
 		  "11111100" when port_read = '1' and A(7 downto 0) = x"77" else -- ZC Status port
         port_7ffd when trdos = '1' and port_read = '1' and A = x"7FFD" else -- #7FFD
