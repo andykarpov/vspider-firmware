@@ -48,6 +48,7 @@ timing
 *sopc_*
 PLLJ_PLLSPE_INFO.txt
 messages.mif
+*.ddb
 
 *.csv
 # Gtkwave
