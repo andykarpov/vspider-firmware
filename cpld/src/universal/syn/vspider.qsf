@@ -178,9 +178,9 @@ set_location_assignment PIN_41 -to KB[2]
 set_location_assignment PIN_42 -to KB[1]
 set_location_assignment PIN_43 -to KB[0]
 set_location_assignment PIN_67 -to BTN_NMI
-set_location_assignment PIN_54 -to SW[0]
-set_location_assignment PIN_55 -to SW[1]
-set_location_assignment PIN_56 -to SW[2]
+set_location_assignment PIN_53 -to SW[0]
+set_location_assignment PIN_54 -to SW[1]
+set_location_assignment PIN_55 -to SW[2]
 set_location_assignment PIN_65 -to ROM_SW
 set_location_assignment PIN_66 -to KEMPSTON_CS_N
 set_location_assignment PIN_68 -to AY_A8_1
@@ -198,3 +198,4 @@ set_global_assignment -name SDC_FILE vspider.sdc
 set_global_assignment -name VHDL_FILE ../rtl/vspider_top.vhd
 set_global_assignment -name VHDL_FILE ../rtl/video/video.vhd
 set_global_assignment -name VHDL_FILE ../rtl/memory/memory.vhd
+set_location_assignment PIN_70 -to CLK_AY
