@@ -60,7 +60,7 @@ architecture RTL of memory is
     signal is_romDIVMMC: std_logic := '0';
     signal is_ramDIVMMC: std_logic := '0';
     
-    signal rom_page    : std_logic_vector(1 downto 0) := "00";
+    signal rom_page    : std_logic_vector(2 downto 0) := "000";
     signal ram_page    : std_logic_vector(4 downto 0) := "00000";
 
     signal vbus_req    : std_logic := '1';
@@ -77,21 +77,24 @@ begin
 	is_rom <= '1' when N_MREQ = '0' and A(15 downto 14) = "00" else '0';
 	is_ram <= '1' when N_MREQ = '0' and is_rom = '0' else '0';
     
-    -- 00 - bank 0, ESXDOS 0.8.7 or GLUK
-    -- 01 - bank 1, TEST or TRDOS
-    -- 10 - bank 2, Basic-128
-    -- 11 - bank 3, Basic-48
+    -- 000 - bank 0, GLUK
+    -- 001 - bank 1, TRDOS
+    -- 010 - bank 2, Basic-128 (pent)
+    -- 011 - bank 3, Basic-48 (pent)
+	 -- 100 - bank 4, ESXDOS
+	 -- 101 - bank 5, DiagROM
+	 -- 110 - bank 6, Basic-128 (classic)
+	 -- 111 - bank 7, Basic-48 (classic)
 	 rom_page <= 
-		"01" when TEST = '1' else -- test rom from esxdos bank
-		(not(TRDOS)) & ROM_BANK when DIVMMC_EN = '0' else -- gluk / trdos / basic128 / basic48		
-		not(is_romDIVMMC) & ROM_BANK; -- esxdos / empty / basic128 / basic48
+		"101" when TEST = '1' else -- DiagROM
+		'0' & (not(TRDOS)) & ROM_BANK when DIVMMC_EN = '0' else -- gluk romset
+		"100" when is_romDIVMMC = '1' else -- ESXDOS 
+		"11" & ROM_BANK; -- classic basics
         
     ROM_A14 <= rom_page(0);
     ROM_A15 <= rom_page(1);
-    N_ROMCS <= '0' when is_rom = '1' and N_RD = '0' and BUS_N_ROMCS = '0' else '1';
-	 ROM_SW <= '1' when TEST = '1' else DIVMMC_EN; 
-		-- 0 - gluk, trdos, basic128, basic48
-		-- 1 - esxdos, test, basic128, basic48
+	 ROM_SW <= rom_page(2);
+    N_ROMCS <= '0' when (is_rom = '1' or is_romDIVMMC = '1') and is_ram = '0' and is_ramDIVMMC = '0' and N_RD = '0' and BUS_N_ROMCS = '0' else '1';
 
     vbus_req <= '0' when ( N_MREQ = '0' or N_IORQ = '0' ) and ( N_WR = '0' or N_RD = '0' ) else '1';
     vbus_rdy <= '0' when (CLK7 = '0' or HCNT0 = '0') else '1';
@@ -99,8 +102,8 @@ begin
     VBUS_MODE_O <= vbus_mode;
     VID_RD_O <= vid_rd;
     
-    N_MRD <= '0' when (vbus_mode = '1' and vbus_rdy = '0') or (vbus_mode = '0' and N_RD = '0' and N_MREQ = '0') else '1';  
-    N_MWR <= '0' when vbus_mode = '0' and(is_ram = '1' or is_ramDIVMMC = '1') and N_WR = '0' and HCNT0 = '0' else '1';
+    N_MRD <= '0' when (vbus_mode = '1' and vbus_rdy = '0') or (vbus_mode = '0' and N_RD = '0' and N_MREQ = '0' and (is_ram = '1' or is_ramDIVMMC = '1')) else '1';  
+    N_MWR <= '0' when vbus_mode = '0' and (is_ram = '1' or is_ramDIVMMC = '1') and N_WR = '0' and HCNT0 = '0' else '1';
 
     is_buf_wr <= '1' when vbus_mode = '0' and HCNT0 = '0' else '0';
     
