@@ -112,14 +112,12 @@ begin
     N_OE <= '0' when (is_ram = '1' or is_ramDIVMMC = '1') and N_RD = '0' else '1';
         
     -- memory map for RAM = 128k
-    ram_page(2 downto 0) <=    
-		 "000" when A(15) = '0' and A(14) = '0' else
-		 "101" when A(15) = '0' and A(14) = '1' else
-		 "010" when A(15) = '1' and A(14) = '0' else
-		 RAM_BANK(2 downto 0);
-
-    -- pentagon-512 when in ZC mode		 
-	 ram_page(4 downto 3) <= RAM_EXT when divmmc_en = '0' else "00";
+	 ram_page <=
+		"00" & "000" when A(15)='0' and A(14)='0' else
+		"00" & "101" when A(15)='0' and A(14)='1' else
+		"00" & "010" when A(15)='1' and A(14)='0' else
+		RAM_EXT & RAM_BANK(2 downto 0) when is_ramDIVMMC='0' else
+		"00" & RAM_BANK(2 downto 0);
     
     MA(13 downto 0) <= 
         REG_E3(0) & A(12 downto 0) when vbus_mode = '0' and is_ramDIVMMC = '1' else -- DIVMMC ram
