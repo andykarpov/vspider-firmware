@@ -23,7 +23,7 @@ all: $(IMAGES)
 
 29c010.rom: $(SRC_DIVMMC)
 	cat src/gluk.rom > 29c010.rom
-	cat src/trdos.rom >> 29c010.rom
+	cat src/trdos611_vspider512.rom >> 29c010.rom
 	cat src/128p-0.rom >> 29c010.rom
 	cat src/128p-1.rom >> 29c010.rom
 	cat src/esxdos.rom >> 29c010.rom
